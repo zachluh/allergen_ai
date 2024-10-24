@@ -1,0 +1,245 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <style type="text/css">
+
+        label {
+            color:#f54254;
+            font-family:Arial;
+            font-size:2vw;
+
+        }
+
+        textarea, input {
+            border:none;
+        }
+
+        .sliders {
+            font-family:Raleway;
+            color:#f54254;
+        }
+
+        .graybar {
+            height:0.2vw;
+            width:9vw;
+            background-color:gray
+        }
+
+        .redbar {
+            height:0.2vw;
+            width:3vw;
+            background-color:#f54254;
+            transition:1s;
+        }
+
+        button {
+            border:#f54254 solid 0.3vw;
+            color:#f54254;
+            transition:1s;
+            background-color: white;
+            font-size:1vw;
+            border-radius:3vw;
+        }
+
+        button:hover {
+            background-color:#f54254;
+            color:white;
+        }
+
+    </style>
+
+    <body class="min-vh-100" style="height:100%;">
+        <main class="container mx-auto" style="display:flex;justify-content:center;align-items:center;height:100%;">
+            <form class="card shadow" method="post" style="width:40%;">
+                <div class="position-relative">
+                    <div class="graybar z-0 position-absolute" id="graybar"></div>
+                    <div class="redbar z-1 position-absolute" id="redbar"></div>
+                </div>
+
+
+                <label class="form-label m-3" for="meal" name="label0" style="">Meal
+                    <textarea class="form-control p-3" placeholder="Alfredo Sauce..." name="meal" id="meal" style="">{{ request.form['meal'] }}</textarea>
+                </label>
+
+
+                <script type="text/javascript">
+                    function getValuesFromSearch(strNomDonnee) {
+                        var strDonnees = location.search.substring(1);
+                        var tabStrDonnees = strDonnees.split('&');
+                        var strValeurDonnee = null;
+                        var binTrouve=false;
+                        for (var i = 0; i < tabStrDonnees.length && !binTrouve; i++) {
+                            var tabStrUneDonnee = tabStrDonnees[i].split('=');
+                            if (tabStrUneDonnee[0] == strNomDonnee) {
+                                strValeurDonnee = tabStrUneDonnee[1];
+                                // Remplacer les + par des espaces
+                                while (strValeurDonnee.indexOf('+') != -1)
+                                    strValeurDonnee = strValeurDonnee.replace('+', ' ');
+                                // Remplacer les %2F par /
+                                while (strValeurDonnee.indexOf('%2F') != -1)
+                                    strValeurDonnee = strValeurDonnee.replace('%2F', '/');
+                                // Remplacer les %27 par l'apostropphe (')
+                                while (strValeurDonnee.indexOf('%27') != -1)
+                                    strValeurDonnee = strValeurDonnee.replace('%27', '\'');
+
+                                binTrouve = true;
+                            }
+                        }
+                        return strValeurDonnee;
+                    }
+
+                    if (getValuesFromSearch("recipeRequired") == "yes")
+                        document.write('<label class="form-label m-3" for="recipe" name="label1" style=" display:none">Recipe<textarea  class="form-control p-3" placeholder="Step 1..." name="recipe" id="recipe">{{ request.form['recipe'] }}</textarea></label>');
+                </script>
+
+
+                <label class="form-label m-3" for="allergies" name="label2" style="display:none;">Allergies
+                    <textarea class="form-control p-3" placeholder="Dairy, Eggs..." name="allergies" id="allergies">{{ request.form['allergies'] }}</textarea>
+                </label>
+
+                <div class="m-4">
+                    <div id="leftslider" class="sliders" style="display:inline-flex;width:5%;">
+                        <h1 class="display-3" style="cursor:pointer;" onclick="slide('left')">&lt;</h1>
+                    </div>
+                    <div id="rightslider" class="sliders ps-5" style="display:inline-flex;width:5%;">
+                        <h1 class="display-3" style="cursor:pointer;" onclick="slide('right')">&gt;</h1>
+                    </div>
+                    <div class= style="display:inline-flex;flex-grow:1;min-width:0;">
+                        <button class="form-control" type="submit" id="submitbutton" style="display:none;width:100%;">Submit</button>
+                    </div>
+
+                </div>
+
+
+
+            </form>
+        </main>
+    </body>
+
+
+
+
+      <script type="text/javascript">
+
+    const params = document.getElementsByTagName('textarea');
+    const labels = document.getElementsByTagName('label');
+    const submit = document.getElementById("submitbutton");
+    const steps = [];
+
+    for (let i = 0; i<=params.length; i++) steps[i] = i;
+
+    for(let i = 0; i<params.length; i++) {
+        params[i].addEventListener("keyup", function(e) {
+                if (e.key === "Enter") submitQuery(params[i], steps[i]);
+            }
+
+        )
+    };
+
+    let bar = document.getElementById('redbar');
+    let grayBar = document.getElementById('graybar');
+    grayBar.style.width = "9vw";
+    bar.style.width = (onlyNumber(grayBar.style.width)/params.length) + "vw";
+    console.log(bar.style.width);
+
+
+
+    function submitQuery(currentParam, step) {
+        var isComplete = true;
+        var emptyParamNumber;
+
+
+
+        for(var i = 0; i<params.length; i++) {
+            if (params[i].value.replace('\n', '') == '') {
+                console.log(i);
+                console.log(params[i].value.substr('\n', ''));
+                isComplete = false;
+                emptyParamNumber = i;
+                break;
+            }
+        }
+
+        console.log(isComplete);
+
+
+
+        if (isComplete) submit.style.display = "inline-flex";
+
+        else {
+
+            submit.style.display = "none";
+            /*var currentParam;
+            for(var i = 0; i<params; i++) {
+                if (params[i].style.display != "none") currentParam = params[i];
+            }#*/
+
+
+
+            if (step > emptyParamNumber) {
+                alert("This form cannot be empty");
+            }
+
+            labels[step].style.display = "none";
+            labels[emptyParamNumber].style.display = "block";
+            moveBar(emptyParamNumber);
+
+            return false;
+
+
+
+        }
+
+
+    };
+
+    function onlyNumber(str) {
+        str = str.toString();
+        return str.replace(/\D/g, '');
+}
+
+    function slide(direction) {
+        var currentPosition;
+        for(var i = 0; i<labels.length; i++) {
+                if (labels[i].style.display != "none") {currentPosition = i;}
+            }
+
+        console.log(currentPosition);
+
+        labels[currentPosition].style.display = "none";
+
+        if (direction == 'left') {
+            if (currentPosition == 0) {
+                labels[labels.length-1].style.display = "block";
+                moveBar(labels.length-1);
+            }
+            else {
+                labels[currentPosition-1].style.display = "block";
+                moveBar(currentPosition-1);
+            }
+
+        }
+
+        if (direction == 'right') {
+            if (currentPosition == labels.length-1) {
+                labels[0].style.display = "block";
+                moveBar(0);
+            }
+            else {
+                labels[currentPosition+1].style.display = "block";
+                moveBar(currentPosition+1);
+            }
+        }
+    }
+
+    function moveBar(position) {
+        console.log(grayBar.style.width);
+        bar.style.width = ((onlyNumber(grayBar.style.width)/params.length)+((onlyNumber(grayBar.style.width)/params.length)*position)) + "vw";
+
+        console.log(bar.style.width);
+        console.log(params.length);
+        console.log(grayBar.style.width);
+    }
+    </script>
+
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <style>
+        h1 {
+            font-family:Arial;
+        }
+
+
+    </style>
+    <div class="container shadow ms-5 pt-3" style="position:absolute;top:15vw;width:70vw;height:25vw;">
+        <h1 style="position:absolute;font-size:4vw;left:5vw;">{% block title %} Recipes that anyone can use {% endblock %}
+            <p style="color:black;font-size:1vw;width:50vw;">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras id ex in ex vehicula mollis ac tincidunt nisi. Nulla facilisi. Mauris sed varius nunc. Curabitur ut nibh lobortis, accumsan felis quis, aliquam dolor. Vestibulum pharetra neque non sollicitudin venenatis. Integer sit amet arcu quis nisi interdum dignissim. In hac habitasse platea dictumst. Mauris lobortis erat sed nibh viverra pharetra. Ut semper eros et sapien fringilla, eu dignissim arcu dictum.
+                Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Integer cursus tempus sem, non vestibulum velit tincidunt et. Integer euismod arcu massa, vitae porttitor lorem consequat non. Sed in nibh nunc. Cras eget orci gravida, ullamcorper nisi vitae, fringilla urna. Etiam non augue ante. Donec ac tortor elit. Aenean ultricies leo id nulla hendrerit fermentum. Praesent vestibulum, nulla vel fermentum luctus, ligula lectus dignissim massa, in convallis ante dui non nisl. Donec tempus, sem eget vestibulum lobortis, justo odio malesuada quam, ut mattis tortor turpis vitae urna.
+            </p>
+            <a href="create?recipeRequired=yes" style="text-decoration:none;">
+                <div class="redirectbutton btn" style="width:15vw;  display: flex;justify-content: center; align-items: center;">
+                    <h1 style="font-size:1vw;margin-bottom:0;">CHANGE A RECIPE</h1>
+                </div>
+            </a>
+            <a href="create?recipeRequired=no" style="text-decoration:none;">
+                <div class="redirectbutton btn" style="width:20vw;  display: flex;justify-content: center; align-items: center; position:absolute;left:18vw;">
+                    <h1 style="font-size:1vw;margin-bottom:0;">CREATE A NEW RECIPE</h1>
+                </div>
+            </a>
+        </h1>
+    </div>
+
+
+{% endblock %}
