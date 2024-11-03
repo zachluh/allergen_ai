@@ -2,21 +2,18 @@ from flask import Flask, render_template, request, url_for, flash, redirect
 import main
 import sys
 from markupsafe import Markup, escape
+from reportlab.pdfgen.canvas import Canvas
 
 
 app = Flask("__name__")
 
-messages = [{'title': 'Message One',
-             'content': 'Message One Content'},
-            {'title': 'Message Two',
-             'content': 'Message Two Content'}
-            ]
+pdf = Canvas("recipe.pdf")
 
 
 
 @app.route("/")
 def index():
-    return render_template('index.html', messages=messages)
+    return render_template('index.html')
 
 @app.route("/login/", methods=['GET', 'POST'])
 def login():
