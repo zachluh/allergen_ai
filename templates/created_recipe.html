@@ -13,9 +13,11 @@
                                     <p style="width:50%;color:#f54254;font-size:1vw;">{{ recipe }}</p>
                             </h1>
                             <div class="d-md-flex gap-2 d-grid ">
-                                <input id="btnVoirCodePermanent" class="btn btn-info me-md-2" value="Save recipe" type="submit" style="background-color:#f54254;color:white;border:none;"/>
+                                <a href="{{ url_for('download_pdf', pdf_name=pdf_name) }}" download>
+                                    <input class="btn btn-info me-md-2" value="Save recipe" type="button" style="background-color:#f54254;color:white;border:none;"/>
+                                </a>
                                 <a href="{{ url_for('index') }}">
-                                    <input id="btnVoirDonneesCodePermanent" class="btn btn-secondary" value="Create a new recipe" type="submit"/>
+                                    <input class="btn btn-secondary" value="Create a new recipe" type="submit"/>
                                 </a>
                             </div>
                         </div>
