@@ -158,10 +158,12 @@ cython_debug/
 recipe.txt
 recipe_unsorted.txt
 
-.png
-.jpg
-.jpeg
-.pdf
+*.png
+*.jpg
+*.jpeg
+*.pdf
+
+static/
 
 # PyCharm
 #  JetBrains specific template is maintained in a separate JetBrains.gitignore that can
