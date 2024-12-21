@@ -2,17 +2,19 @@ from uuid import uuid4
 
 from flask import Flask, render_template, request, url_for, flash, redirect, session
 from flask import send_from_directory
+from data import db
 
 import main
-import sys
 from markupsafe import Markup, escape
-from reportlab.pdfgen.canvas import Canvas
 import uuid
-import os
 import pdf_generator
 
 
 app = Flask("__name__")
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.sqlite3'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+db.create_all()
 
 
 
@@ -23,6 +25,9 @@ def index():
 @app.route("/login/", methods=['GET', 'POST'])
 def login():
     return render_template('login.html')
+
+@app.route("/login/", methods=['GET_POST'])
+
 
 
 @app.route('/create/', methods=['GET'])

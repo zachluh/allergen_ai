@@ -72,13 +72,10 @@
                             var tabStrUneDonnee = tabStrDonnees[i].split('=');
                             if (tabStrUneDonnee[0] == strNomDonnee) {
                                 strValeurDonnee = tabStrUneDonnee[1];
-                                // Remplacer les + par des espaces
                                 while (strValeurDonnee.indexOf('+') != -1)
                                     strValeurDonnee = strValeurDonnee.replace('+', ' ');
-                                // Remplacer les %2F par /
                                 while (strValeurDonnee.indexOf('%2F') != -1)
                                     strValeurDonnee = strValeurDonnee.replace('%2F', '/');
-                                // Remplacer les %27 par l'apostropphe (')
                                 while (strValeurDonnee.indexOf('%27') != -1)
                                     strValeurDonnee = strValeurDonnee.replace('%27', '\'');
 
