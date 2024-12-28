@@ -30,12 +30,18 @@ class users(db.Model):
     __tablename__ = 'users_table'
 
     _id = db.Column("id", db.Integer, primary_key=True)
-    name = db.Column("name", db.String(100))
+    first_name = db.Column("first_name", db.String(100))
+    last_name = db.Column("last_name", db.String(100))
     email = db.Column("email", db.String(100))
+    password = db.Column("password", db.String(100))
 
-    def __init__(self, name, email):
-        self.name = name
+
+    def __init__(self, first_name, last_name, email, password):
+        self.first_name = first_name
+        self.last_name = last_name
         self.email = email
+        self.password = password
+
 
 class recipes(db.Model):
     __bind_key__ = 'recipes'
@@ -56,21 +62,32 @@ with app.app_context():
 def index():
     return render_template('index.html')
 
-@app.route("/login/", methods=['GET'])
+@app.route("/login/", methods=['GET', 'POST'])
 def login():
+    if request.method == "POST":
+        found_user = users.query.filter_by(email=request.form.get('email'), password=request.form.get('password')).first()
+        if found_user:
+            print("Login success")
+            return render_template('account_page.html', first_name=found_user.first_name)
+        else:
+            print("Login unsuccessful")
     return render_template('login.html')
 
 @app.route("/signup/", methods=['GET', 'POST'])
 def signup():
-    print("gulp")
     if request.method == "POST":
-        first_name = request.form.get('first_name')
-        last_name = request.form.get('last_name')
-        email = request.form.get('email')
-        password = request.form.get('password')
 
-        print(first_name, last_name, email, password)
-        return render_template('index.html')
+        user = users(request.form.get('first_name'), request.form.get('last_name'), request.form.get('email'), request.form.get('password'))
+
+        first_name = request.form.get('first_name')
+
+        db.session.add(user)
+        db.session.commit()
+
+        print("User " + first_name + "added successfully")
+        print(users.query.all())
+
+        return render_template('account_page.html', first_name=first_name)
     return render_template('signup.html')
 
 
