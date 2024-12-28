@@ -8,26 +8,26 @@
     </head>
     <body class="flex-column min-vh-100" style="display:flex;align-items:center;justify-content:center;height:100%;">
         <main class="container" style="width:35vw;">
-            <form class="card p-4 shadow">
+            <form method="post" class="card p-4 shadow">
                 <h1 class="display-6 mb-4 card-title">Sign Up.</h1>
                 <div class="mb-3">
                   <div class="d-inline-flex">
                     <label class="form-label">First Name</label>
-                    <input type="text" class="form-control" action="" placeholder="First Name"/>
+                    <input type="text" class="form-control" action="" name="first_name" placeholder="First Name"/>
                   </div>
                   <div class="d-inline-flex">
                     <label class="form-label">Last Name</label>
-                    <input type="text" class="form-control" action="" placeholder="Last Name"/>
+                    <input type="text" class="form-control" action="" name="last_name" placeholder="Last Name"/>
                   </div>
                 </div>
                 <div class="mb-3">
                     <label class="form-label">E-mail</label><br>
-                    <input type="text" class="form-control" action="" placeholder="E-mail"/>
+                    <input type="text" class="form-control" action="" name="email" placeholder="E-mail"/>
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label">Password</label><br>
-                    <input type="text" class="form-control" action="" placeholder="Password"/>
+                    <input type="text" class="form-control" action="" name="password" placeholder="Password"/>
                 </div>
                 <input class="form-control" type="submit" style="background-color:#d64161;color:white;border:none;height:2vw;"/>
             </form>

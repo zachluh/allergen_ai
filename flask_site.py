@@ -2,7 +2,8 @@ from uuid import uuid4
 
 from flask import Flask, render_template, request, url_for, flash, redirect, session
 from flask import send_from_directory
-from data import db
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import Integer
 
 import main
 from markupsafe import Markup, escape
@@ -11,10 +12,43 @@ import pdf_generator
 
 
 app = Flask("__name__")
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.sqlite3'
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.sqlite3'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-db.create_all()
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
+
+app.config['SQLALCHEMY_BINDS'] = {
+        'users': 'sqlite:///users.db',
+        'recipes': 'sqlite:///recipes.db'
+    }
+
+db = SQLAlchemy(app)
+
+class users(db.Model):
+
+    __bind_key__ = 'users'
+    __tablename__ = 'users_table'
+
+    _id = db.Column("id", db.Integer, primary_key=True)
+    name = db.Column("name", db.String(100))
+    email = db.Column("email", db.String(100))
+
+    def __init__(self, name, email):
+        self.name = name
+        self.email = email
+
+class recipes(db.Model):
+    __bind_key__ = 'recipes'
+    __tablename__ = 'recipes_table'
+
+    _id = db.Column("id", db.Integer, primary_key=True)
+    name = db.Column("name", db.String(100))
+
+    def __init__(self, name):
+        self.name = name
+
+with app.app_context():
+    db.create_all()
 
 
 
@@ -22,11 +56,23 @@ db.create_all()
 def index():
     return render_template('index.html')
 
-@app.route("/login/", methods=['GET', 'POST'])
+@app.route("/login/", methods=['GET'])
 def login():
     return render_template('login.html')
 
-@app.route("/login/", methods=['GET_POST'])
+@app.route("/signup/", methods=['GET', 'POST'])
+def signup():
+    print("gulp")
+    if request.method == "POST":
+        first_name = request.form.get('first_name')
+        last_name = request.form.get('last_name')
+        email = request.form.get('email')
+        password = request.form.get('password')
+
+        print(first_name, last_name, email, password)
+        return render_template('index.html')
+    return render_template('signup.html')
+
 
 
 
