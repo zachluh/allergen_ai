@@ -9,9 +9,11 @@ import main
 from markupsafe import Markup, escape
 import uuid
 import pdf_generator
+import os
 
 
 app = Flask("__name__")
+app.secret_key = os.getenv("SESSION_KEY")
 #app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.sqlite3'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
@@ -48,9 +50,11 @@ class recipes(db.Model):
     __tablename__ = 'recipes_table'
 
     _id = db.Column("id", db.Integer, primary_key=True)
+    user = db.Column("user", db.Integer)
     name = db.Column("name", db.String(100))
 
-    def __init__(self, name):
+    def __init__(self, user, name):
+        self.user = user
         self.name = name
 
 with app.app_context():
@@ -62,13 +66,19 @@ with app.app_context():
 def index():
     return render_template('index.html')
 
+@app.route("/account_page/", methods=["GET", "POST"])
+def account_page():
+    return render_template('account_page.html')
+
 @app.route("/login/", methods=['GET', 'POST'])
 def login():
     if request.method == "POST":
         found_user = users.query.filter_by(email=request.form.get('email'), password=request.form.get('password')).first()
         if found_user:
             print("Login success")
-            return render_template('account_page.html', first_name=found_user.first_name)
+            session["user"] = found_user._id
+            recipe = recipes.query.filter_by(user=found_user._id)
+            return render_template('account_page.html', first_name=found_user.first_name, recipe=recipe)
         else:
             print("Login unsuccessful")
     return render_template('login.html')
@@ -86,6 +96,8 @@ def signup():
 
         print("User " + first_name + "added successfully")
         print(users.query.all())
+
+        session["user"] = user._id
 
         return render_template('account_page.html', first_name=first_name)
     return render_template('signup.html')
@@ -112,6 +124,12 @@ def generate_recipe():
 
     pdf_name = "recipe" + str(uuid.uuid4()) + ".pdf"
     pdf_generator.generate(response, pdf_name)
+
+    if "user" in session:
+        saved_recipe = recipes(session["user"], allergies + " free " + meal)
+        db.session.add(saved_recipe)
+        db.session.commit()
+
 
     return render_template('created_recipe.html', recipe=Markup(response.replace('\n', '<br>')), pdf_name=pdf_name)
 

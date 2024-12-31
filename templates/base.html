@@ -34,12 +34,6 @@
             border:none;
         }
 
-        .message {
-            padding: 10px;
-            margin: 5px;
-            background-color: #f3f3f3
-        }
-
 
         nav a {
             color: #d64161;
@@ -74,22 +68,26 @@
     </style>
 </head>
 <body>
-    <nav class="ps-5 pe-5 mb-5" style="width:100%;position:absolute;">
-        <ul>
-             <div style="display:flex;gap:1vw;m">
-                <div style="display:inline-flex;background:none;flex-grow:1;">
-                    <a href="{{ url_for('index') }}" style="font-family:Arial;font-size:1vw;align:center;">Home</a>
-                    <a href="#" style="font-family:Arial;font-size:1vw;align:center;">About</a>
-                </div>
-                <div style="display:inline-flex;justify-content:flex-end;flex-grow:1;">
-                    <a href="{{ url_for('login') }}" style="font-family:Arial;font-size:1vw;align:center;">
-                        Login
-                    </a>
-                    <a href="{{ url_for('signup') }}" style="font-family:Arial;font-size:1vw;align:center;">
-                         Sign Up
-                    </a>
-                </div>
-            </div>
+    <nav class=" navbar navbar-expand-lg ms-5 pe-5 mb-5" style="width:100%;position:absolute;">
+        <ul class="navbar-nav">
+            <li class="navbar-item" style="background:none;">
+                <a href="{{ url_for('index') }}" style="font-family:Arial;font-size:1vw;">Home</a>
+                <a href="#" style="font-family:Arial;font-size:1vw;">About</a>
+            </li>
+             {% if "user" not in session %}
+            <li class="navbar-item" style="justify-content:flex-end;">
+                <a href="{{ url_for('login') }}" style="font-family:Arial;font-size:1vw;">
+                    Login
+                </a>
+                <a href="{{ url_for('signup') }}" style="font-family:Arial;font-size:1vw;">
+                     Sign Up
+                </a>
+            </li>
+             {% else %}
+             <li class="navbar-item" style="background:#d64161;">
+                 <a class="btn" href="{{ url_for('account_page') }}" style="font-family:Arial;font-size:1vw;color:white;"> Profile </a>
+             </li>
+             {% endif %}
         </ul>
 
 
