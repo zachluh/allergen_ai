@@ -5,8 +5,11 @@
     <div>
           <main class="container pt-5">
               <h1> Hi {{first_name}}, </h1>
-              {% if recipe %}
-              <h1> Here is a recipe : {{recipe.name}}</h1>
+              {% if recipes %}
+                {% for recipe in recipes%}
+                    <a href="{{url_for('download_pdf', pdf_name=recipe.true_name)}}"> Here is a recipe : {{recipe.name}}</a>
+                    <br>
+                {% endfor %}
               {% else %}
               <h1> You have no recipes. </h1>
               {% endif %}

@@ -1,3 +1,4 @@
+from dbm import error
 from uuid import uuid4
 
 from flask import Flask, render_template, request, url_for, flash, redirect, session
@@ -54,9 +55,10 @@ class recipes(db.Model):
     name = db.Column("name", db.String(100))
     true_name = db.Column("true_name", db.String(100))
 
-    def __init__(self, user, name):
+    def __init__(self, user, name, true_name):
         self.user = user
         self.name = name
+        self.true_name = true_name
 
 with app.app_context():
     db.create_all()
@@ -70,9 +72,9 @@ def index():
 @app.route("/account_page/", methods=["GET", "POST"])
 def account_page():
     user = users.query.filter_by(_id=session["user"]).first()
-    recipe = recipes.query.filter_by(user=session["user"]).first()
+    user_recipes = recipes.query.filter_by(user=session["user"]).all()
     print("ran")
-    return render_template('account_page.html', first_name=user.first_name, recipe=recipe)
+    return render_template('account_page.html', first_name=user.first_name, recipes=user_recipes)
 
 @app.route("/login/", methods=['GET', 'POST'])
 def login():
@@ -90,19 +92,26 @@ def login():
 def signup():
     if request.method == "POST":
 
-        user = users(request.form.get('first_name'), request.form.get('last_name'), request.form.get('email'), request.form.get('password'))
+        existing_email = users.query.filter_by(email=request.form.get('email')).first()
 
-        first_name = request.form.get('first_name')
+        if not existing_email:
 
-        db.session.add(user)
-        db.session.commit()
+            user = users(request.form.get('first_name'), request.form.get('last_name'), request.form.get('email'), request.form.get('password'))
 
-        print("User " + first_name + "added successfully")
-        print(users.query.all())
+            first_name = request.form.get('first_name')
 
-        session["user"] = user._id
+            db.session.add(user)
+            db.session.commit()
 
-        return redirect(url_for('account_page'))
+            print("User " + first_name + "added successfully")
+            print(users.query.all())
+
+            session["user"] = user._id
+
+            return redirect(url_for('account_page'))
+        else:
+            return render_template('signup.html', error="This email is already in use")
+
     return render_template('signup.html')
 
 
@@ -129,7 +138,7 @@ def generate_recipe():
     pdf_generator.generate(response, pdf_name)
 
     if "user" in session:
-        saved_recipe = recipes(session["user"], allergies + " free " + meal)
+        saved_recipe = recipes(session["user"], allergies + " free " + meal, pdf_name)
         db.session.add(saved_recipe)
         db.session.commit()
 

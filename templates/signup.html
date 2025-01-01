@@ -6,6 +6,13 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Login/Sign up</title>
     </head>
+
+    <style>
+        .input-error {
+            border: 0.1vw solid red;
+        }
+    </style>
+
     <body class="flex-column min-vh-100" style="display:flex;align-items:center;justify-content:center;height:100%;">
         <main class="container" style="width:35vw;">
             <form method="post" class="card p-4 shadow">
@@ -22,7 +29,7 @@
                 </div>
                 <div class="mb-3">
                     <label class="form-label">E-mail</label><br>
-                    <input type="text" class="form-control" action="" name="email" placeholder="E-mail"/>
+                    <input type="text" class="form-control {{'input-error' if error}}" action="" name="email" placeholder="E-mail"/>
                 </div>
 
                 <div class="mb-3">
@@ -30,6 +37,10 @@
                     <input type="text" class="form-control" action="" name="password" placeholder="Password"/>
                 </div>
                 <input class="form-control" type="submit" style="background-color:#d64161;color:white;border:none;height:2vw;"/>
+
+                {% if error %}
+                    <p class="mb-3" style="color:red">{{error}}</p>
+                {% endif %}
             </form>
             <p style="display:infline-flex;">or <a href="{{url_for('login')}}" style="color:#d64161;text-decoration: none;">Login</a></p>
         </main>
