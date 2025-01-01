@@ -69,26 +69,50 @@
 </head>
 <body>
     <nav class=" navbar navbar-expand-lg ms-5 pe-5 mb-5" style="width:100%;position:absolute;">
-        <ul class="navbar-nav">
-            <li class="navbar-item" style="background:none;">
-                <a href="{{ url_for('index') }}" style="font-family:Arial;font-size:1vw;">Home</a>
-                <a href="#" style="font-family:Arial;font-size:1vw;">About</a>
+        <ul class="navbar-nav mr-auto" style="gap:2vw;">
+            <li class="nav-item" style="background:none;align-items:center;justify-content:center;">
+                <a class="btn" href="{{ url_for('index') }}" style="font-family:Arial;font-size:1vw;color:#d64161;">Home</a>
             </li>
+            <l1 class="nav-item" style="background:none;align-items:center;justify-content:center;">
+                <a class="btn" href="#" style="font-family:Arial;font-size:1vw;color:#d64161;">About</a>
+            </l1>
+
+
+
+
+        </ul>
+
+
+        <ul class="navbar-nav ms-auto pe-5" style="gap:2vw;">
+
              {% if "user" not in session %}
-            <li class="navbar-item" style="justify-content:flex-end;">
-                <a href="{{ url_for('login') }}" style="font-family:Arial;font-size:1vw;">
+            <li class="nav-item" style="justify-content:flex-end;align-items:center;">
+                <a class="btn nav-link" href="{{ url_for('login') }}" style="font-family:Arial;font-size:1vw;color:#d64161;">
                     Login
                 </a>
-                <a href="{{ url_for('signup') }}" style="font-family:Arial;font-size:1vw;">
+            </li>
+            <li>
+                <a class=" btn nav-link" href="{{ url_for('signup') }}" style="font-family:Arial;font-size:1vw;color:#d64161;">
                      Sign Up
                 </a>
             </li>
-             {% else %}
-             <li class="navbar-item" style="background:#d64161;">
-                 <a class="btn" href="{{ url_for('account_page') }}" style="font-family:Arial;font-size:1vw;color:white;"> Profile </a>
+
+            {% else %}
+
+             <li class="nav-item" style="background:#d64161;">
+                 <a class="nav-link" class="btn" href="{{ url_for('account_page') }}" style="font-family:Arial;font-size:1vw;color:white;"> Profile </a>
              </li>
+
+            <li>
+                <a class=" btn nav-link" href="{{ url_for('logout') }}" style="font-family:Arial;font-size:1vw;color:#d64161;">Logout</a>
+            </li>
+
+
              {% endif %}
         </ul>
+
+
+
 
 
 

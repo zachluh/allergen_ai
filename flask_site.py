@@ -52,6 +52,7 @@ class recipes(db.Model):
     _id = db.Column("id", db.Integer, primary_key=True)
     user = db.Column("user", db.Integer)
     name = db.Column("name", db.String(100))
+    true_name = db.Column("true_name", db.String(100))
 
     def __init__(self, user, name):
         self.user = user
@@ -68,7 +69,10 @@ def index():
 
 @app.route("/account_page/", methods=["GET", "POST"])
 def account_page():
-    return render_template('account_page.html')
+    user = users.query.filter_by(_id=session["user"]).first()
+    recipe = recipes.query.filter_by(user=session["user"]).first()
+    print("ran")
+    return render_template('account_page.html', first_name=user.first_name, recipe=recipe)
 
 @app.route("/login/", methods=['GET', 'POST'])
 def login():
@@ -77,8 +81,7 @@ def login():
         if found_user:
             print("Login success")
             session["user"] = found_user._id
-            recipe = recipes.query.filter_by(user=found_user._id)
-            return render_template('account_page.html', first_name=found_user.first_name, recipe=recipe)
+            return redirect(url_for('account_page'))
         else:
             print("Login unsuccessful")
     return render_template('login.html')
@@ -99,7 +102,7 @@ def signup():
 
         session["user"] = user._id
 
-        return render_template('account_page.html', first_name=first_name)
+        return redirect(url_for('account_page'))
     return render_template('signup.html')
 
 
@@ -132,6 +135,11 @@ def generate_recipe():
 
 
     return render_template('created_recipe.html', recipe=Markup(response.replace('\n', '<br>')), pdf_name=pdf_name)
+
+@app.route('/logout/', methods=['GET', 'POST'])
+def logout():
+    session.pop("user", None)
+    return redirect(url_for('index'))
 
 @app.route('/create/<path:pdf_name>')
 def download_pdf(pdf_name):
