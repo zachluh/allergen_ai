@@ -8,9 +8,13 @@
 
 
     </style>
-    <div class="container shadow ms-5 pt-3" style="position:absolute;top:15vw;width:70vw;height:25vw;">
-        <h1 style="position:absolute;font-size:4vw;left:5vw;">{% block title %} Recipes that anyone can use {% endblock %}
-            <p style="color:black;font-size:1vw;width:50vw;">
+
+    <div class="container d-flex justify-content-center p-5">
+        <h1>The first AI allergy-free recipe generator ever</h1>
+    </div>
+    <div class="container ms-5 pt-3" style="position:absolute;top:15vw;width:70vw;height:25vw;">
+        <h1  style="position:absolute;font-size:3.5vw;left:5vw;"> Anyone should get to eat good food
+            <p style="color:white;font-size:1vw;width:50vw;">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras id ex in ex vehicula mollis ac tincidunt nisi. Nulla facilisi. Mauris sed varius nunc. Curabitur ut nibh lobortis, accumsan felis quis, aliquam dolor. Vestibulum pharetra neque non sollicitudin venenatis. Integer sit amet arcu quis nisi interdum dignissim. In hac habitasse platea dictumst. Mauris lobortis erat sed nibh viverra pharetra. Ut semper eros et sapien fringilla, eu dignissim arcu dictum.
                 Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Integer cursus tempus sem, non vestibulum velit tincidunt et. Integer euismod arcu massa, vitae porttitor lorem consequat non. Sed in nibh nunc. Cras eget orci gravida, ullamcorper nisi vitae, fringilla urna. Etiam non augue ante. Donec ac tortor elit. Aenean ultricies leo id nulla hendrerit fermentum. Praesent vestibulum, nulla vel fermentum luctus, ligula lectus dignissim massa, in convallis ante dui non nisl. Donec tempus, sem eget vestibulum lobortis, justo odio malesuada quam, ut mattis tortor turpis vitae urna.
             </p>
@@ -26,6 +30,44 @@
             </a>
         </h1>
     </div>
+    <div class="d-flex flex-column justify-content-center align-items-center" style="position:absolute;top:45vw;width:100%;">
+        <div class="container">
+            <h1 style="text-align:center;">Make a recipe anyone can enjoy, <strong> instantly </strong> </h1>
+        </div>
+        <div class="container d-flex justify-content-center pt-5" style="gap:10vw;">
+            <div>
+
+                <img src="static/step1-allergysite.gif" style="width:20vw;height:12vw;border-radius:15px;"/>
+                <p style="color:white" >1 - Enter the name of the meal</p>
+            </div>
+            <div>
+                <img src="static/step2-allergysite.gif" style="width:20vw;height:12vw;border-radius:15px;"/>
+                <p style="color:white" >2 - Copy-paste your recipe</p>
+            </div>
+            <div>
+                <img src="static/step3-allergysite.gif" style="width:20vw;height:12vw;border-radius:15px;"/>
+                <p style="color:white" >3 - Finally, enter your allergies and submit. Voila!</p>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="d-flex inline-flex" style="position:absolute;top:70vw;background-color:white;width:100%;gap:5vw;">
+        <div class="ms-5 pt-2" style="width:70%; height:10vw;">
+            <h1 style="color:#d64161;font-size:3vw;">You can save your recipes, too</h1>
+            <p>Download your recipes after you create them. If you create a free account, your recipes will be saved on your profile --></p>
+        </div>
+        <div class=" d-flex justify-content-center align-items-center" style="width:10vw;">
+            <a href="/signup" style="text-decoration:none;">
+                <div class="btn" style="background-color:#d64161;width:10vw;">
+                    <h1 class="mb-0" style="font-size:1vw;">Create an account</h1>
+                </div>
+            </a>
+        </div>
+    </div>
+
 
 
 {% endblock %}
+
+{% set navColor = '#d64161' %}
