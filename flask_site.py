@@ -12,6 +12,10 @@ import uuid
 import pdf_generator
 import os
 
+from werkzeug.utils import secure_filename
+
+import images
+
 
 app = Flask("__name__")
 app.secret_key = os.getenv("SESSION_KEY")
@@ -24,6 +28,13 @@ app.config['SQLALCHEMY_BINDS'] = {
         'users': 'sqlite:///users.db',
         'recipes': 'sqlite:///recipes.db'
     }
+
+UPLOAD_FOLDER = 'uploads'
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 db = SQLAlchemy(app)
 
@@ -63,7 +74,8 @@ class recipes(db.Model):
 with app.app_context():
     db.create_all()
 
-
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @app.route("/")
 def index():
@@ -126,6 +138,20 @@ def generate_recipe():
     meal = request.form.get('meal')
     recipe = request.form.get('recipe')
     allergies = request.form.get('allergies')
+
+    if recipe == '':
+        if request.method == 'POST':
+            if 'image' not in request.files:
+                return "No file part"
+            file = request.files['image']
+            if file.filename == '':
+                return "No selected file"
+            if file and allowed_file(file.filename):
+                filename = secure_filename(file.filename)
+                filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                file.save(filepath)
+                recipe = images.read(filepath)
+
 
     response = ''
 

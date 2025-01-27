@@ -50,7 +50,7 @@
 
     <body class="min-vh-100" style="height:100%;">
         <main class="container mx-auto" style="display:flex;justify-content:center;align-items:center;height:100%;">
-            <form class="card shadow" method="post" style="width:40%;">
+            <form class="card shadow" method="post" style="width:40%;" enctype="multipart/form-data">
                 <div class="position-relative">
                     <div class="graybar z-0 position-absolute" id="graybar"></div>
                     <div class="redbar z-1 position-absolute" id="redbar"></div>
@@ -85,8 +85,10 @@
                         return strValeurDonnee;
                     }
 
-                    if (getValuesFromSearch("recipeRequired") == "yes")
+                    if (getValuesFromSearch("recipeRequired") == "yes") {
                         document.write('<label class="form-label m-3" for="recipe" name="label1" style=" display:none">Recipe<textarea  class="form-control p-3" placeholder="Step 1..." name="recipe" id="recipe">{{ request.form['recipe'] }}</textarea></label>');
+                        document.write('<input class="form-control m-3" type="file" id="image" name="image" style="display:none;width:auto;" placeholder="Choose picture"/>');
+                    }
                 </script>
 
 
@@ -122,6 +124,7 @@
     const labels = document.getElementsByTagName('label');
     const submit = document.getElementById("submitbutton");
     const steps = [];
+    const imageicon = document.getElementById("image");
 
     for (let i = 0; i<=params.length; i++) steps[i] = i;
 
@@ -149,11 +152,20 @@
 
         for(var i = 0; i<params.length; i++) {
             if (params[i].value.replace('\n', '') == '') {
-                console.log(i);
-                console.log(params[i].value.substr('\n', ''));
-                isComplete = false;
-                emptyParamNumber = i;
-                break;
+                if (i == 1 && imageicon != null) {
+                    if (!imageicon.files || imageicon.files.length === 0) {
+                        isComplete = false;
+                        emptyParamNumber = i;
+                        break;
+                    }
+                }
+
+                else {
+                    isComplete = false;
+                    emptyParamNumber = i;
+                    break;
+                }
+
             }
         }
 
@@ -180,6 +192,9 @@
             labels[step].style.display = "none";
             labels[emptyParamNumber].style.display = "block";
             moveBar(emptyParamNumber);
+
+            if (emptyParamNumber == 1) imageicon.style.display = "block";
+            else imageicon.style.display = "none";
 
             return false;
 
@@ -212,6 +227,10 @@
             }
             else {
                 labels[currentPosition-1].style.display = "block";
+                if (imageicon != null) {
+                    if (currentPosition - 1 == 1) imageicon.style.display = "block";
+                    else imageicon.style.display = "none";
+                }
                 moveBar(currentPosition-1);
             }
 
@@ -224,6 +243,10 @@
             }
             else {
                 labels[currentPosition+1].style.display = "block";
+                if (imageicon != null) {
+                    if (currentPosition + 1 == 1) imageicon.style.display = "block";
+                    else imageicon.style.display = "none";
+                }
                 moveBar(currentPosition+1);
             }
         }
@@ -232,10 +255,6 @@
     function moveBar(position) {
         console.log(grayBar.style.width);
         bar.style.width = ((onlyNumber(grayBar.style.width)/params.length)+((onlyNumber(grayBar.style.width)/params.length)*position)) + "vw";
-
-        console.log(bar.style.width);
-        console.log(params.length);
-        console.log(grayBar.style.width);
     }
     </script>
 

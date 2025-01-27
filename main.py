@@ -36,11 +36,6 @@ def work_from_nothing(meal, allergies):
 
   return completion.choices[0].message.content
 
-"""def cleanup():
-  with open("recipe_unsorted.txt", 'r') as ru, open("recipe_unsorted.txt", 'w') as re:
-    for line in ru:
-      if line.rstrip():
-        re.write(line)"""
 
 
 

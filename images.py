@@ -1,62 +1,32 @@
 import pytesseract
 from PIL import Image
 import os
+import cv2
+import easyocr
 
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
-def curate(text, client):
-    with open("recipe_unsorted.txt", "w") as f:
-        f.write(text)
-    with open("recipe_unsorted.txt", "r") as f:
-        lines = f.readlines()
-
-    open('recipe.txt', 'w').close()
-
-    i=0
-    after_steps = False
-    step_count = 1
-    for line in lines:
-
-        if len(line) > 5:
-            completion = client.chat.completions.create(
-                model="gpt-3.5-turbo",
-                messages=[
-                    {"role": "user",
-                     "content": f"Correct the spelling or grammar mistakes in the following line, and do not output anything else: {line}"}
-                ]
-
-            )
-
-            lines[i] = completion.choices[0].message.content
-
-            if after_steps:
-                step = lines[i]
-                if step[0].isdigit() is False:
-                    lines[i] = f"{step_count}. {step}"
-                step_count += 1
-
-
-            if "steps" in lines[i].lower() or "instructions" in lines[i].lower():
-                after_steps = True
-
-
-        i += 1
 
 
 
+def preprocess_image(image_path):
+    image = cv2.imread(image_path)
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    binary = cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
+                                   cv2.THRESH_BINARY, 11, 2)
+    scale_factor = 2
+    resized = cv2.resize(binary, None, fx=scale_factor, fy=scale_factor, interpolation=cv2.INTER_LINEAR)
+    return resized
 
-    for line in lines:
-        with open("recipe.txt", "a") as f:
-            f.write(f"{line}\n")
 
+def read(image_path):
+    processed_image = Image.fromarray(preprocess_image(image_path))
+    text = pytesseract.image_to_string(processed_image, lang='eng')
+    print(text)
 
+    os.remove(image_path)
 
-def read(client):
-    for file in os.listdir(os.getcwd()):
-        if file.endswith(".png") or file.endswith(".jpg") or file.endswith(".jpeg"):
-            image = Image.open(file).convert('L')
-            text = pytesseract.image_to_string(image)
-            curate(text, client)
+    return text
 
 
 
