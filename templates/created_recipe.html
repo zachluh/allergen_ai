@@ -10,7 +10,7 @@
                     <main class="container mx-auto p-7" style="display:flex;justify-content:center;align-items:center;height:100%;">
                         <div class="card shadow p-4" style="display:inline-block; backdrop-filter:blur(10px);">
                             <h1 style="font-size:4vw;color:black;"> Here is your new recipe:
-                                    <p style="width:50%;color:#f54254;font-size:1vw;">{{ recipe }}</p>
+                                    <p id="recipe-text" style="width:50%;color:#f54254;font-size:1vw;">{{ recipe }}</p>
                             </h1>
                             <div class="d-md-flex gap-2 d-grid ">
                                 <a href="{{ url_for('download_pdf', pdf_name=pdf_name) }}" download>
@@ -23,6 +23,22 @@
                         </div>
 
                     </main>
+
+                    <script>
+                        function adjustFontSize() {
+                            let pTag = document.getElementById("recipe-text");
+                            let card = document.querySelector(".card");
+                            let fontSize = 1.5; // Start at 1.5vw
+
+                            while (pTag.scrollHeight > card.clientHeight * 0.6 && fontSize > 0.8) {
+                                fontSize -= 0.05; // Decrease the font size gradually
+                                pTag.style.fontSize = fontSize + "vw";
+                            }
+                        }
+
+                        window.onload = adjustFontSize;
+                        window.onresize = adjustFontSize;
+                    </script>
 
                 </body>
 

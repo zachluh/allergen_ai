@@ -6,10 +6,21 @@
           <main class="container pt-5">
               <h1> Hi {{first_name}}, </h1>
               {% if recipes %}
-                {% for recipe in recipes%}
-                    <a href="{{url_for('download_pdf', pdf_name=recipe.true_name)}}"> Here is a recipe : {{recipe.name}}</a>
-                    <br>
-                {% endfor %}
+              <div class="container mt-5">
+                  <p>Here are your recipes:</p>
+                <div class="row mt-3">
+                    {% for recipe in recipes%}
+                      <div class="col-md-4 col-sm-6 mb-4">
+                          <div class="card shadow d-flex justify-content-center">
+                              <a target="_blank" href="{{url_for('download_pdf', pdf_name=recipe.true_name)}}" style="text-decoration:none;color:#d64161" class="m-2">{{recipe.name}}</a>
+                          </div>
+
+                      </div>
+
+                    {% endfor %}
+                  </div>
+              </div>
+
               {% else %}
               <h1> You have no recipes. </h1>
               {% endif %}

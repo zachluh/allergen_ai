@@ -161,7 +161,7 @@ def generate_recipe():
        response = main.work(meal, recipe, allergies)
 
     pdf_name = "recipe" + str(uuid.uuid4()) + ".pdf"
-    pdf_generator.generate(response, pdf_name)
+    pdf_generator.generate(response, pdf_name, f"{allergies}-free {meal}")
 
     if "user" in session:
         saved_recipe = recipes(session["user"], allergies + " free " + meal, pdf_name)
