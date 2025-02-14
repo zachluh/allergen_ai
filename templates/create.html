@@ -86,7 +86,7 @@
                     }
 
                     if (getValuesFromSearch("recipeRequired") == "yes") {
-                        document.write('<label class="form-label m-3" for="recipe" name="label1" style=" display:none">Recipe<textarea  class="form-control p-3" placeholder="Step 1..." name="recipe" id="recipe">{{ request.form['recipe'] }}</textarea></label>');
+                        document.write('<label class="form-label m-3" for="recipe" name="label1" style=" display:none">Recipe<textarea  class="form-control p-3" placeholder="Copy paste or submit a picture..." name="recipe" id="recipe">{{ request.form['recipe'] }}</textarea></label>');
                         document.write('<input class="form-control m-3" type="file" id="image" name="image" style="display:none;width:auto;" placeholder="Choose picture"/>');
                     }
                 </script>

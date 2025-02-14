@@ -1,10 +1,9 @@
 from dbm import error
 from uuid import uuid4
 
-from flask import Flask, render_template, request, url_for, flash, redirect, session
+from flask import Flask, render_template, request, url_for, flash, redirect, session, jsonify
 from flask import send_from_directory
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import Integer
 
 import main
 from markupsafe import Markup, escape
@@ -170,6 +169,17 @@ def generate_recipe():
 
 
     return render_template('created_recipe.html', recipe=Markup(response.replace('\n', '<br>')), pdf_name=pdf_name)
+
+@app.route('/delete_recipe/<int:recipe_id>', methods=['POST'])
+def delete_recipe(recipe_id):
+    # Assuming you're using SQLAlchemy to interact with your database
+    recipe = recipes.query.get(recipe_id)
+    if recipe:
+        db.session.delete(recipe)
+        db.session.commit()
+        os.remove("static/" + recipe.true_name);
+        return jsonify({'success': True})
+    return jsonify({'success': False}), 404
 
 @app.route('/logout/', methods=['GET', 'POST'])
 def logout():
