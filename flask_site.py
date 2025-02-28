@@ -18,6 +18,8 @@ import images
 
 app = Flask("__name__")
 app.secret_key = os.getenv("SESSION_KEY")
+port = int(os.getenv("PORT", 5000))  # Use Railway's PORT if available
+app.run(host="0.0.0.0", port=port)
 #app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.sqlite3'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
