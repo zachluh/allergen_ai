@@ -18,8 +18,6 @@ import images
 
 app = Flask("__name__")
 app.secret_key = os.getenv("SESSION_KEY")
-port = int(os.getenv("PORT", 5000))  # Use Railway's PORT if available
-app.run(host="0.0.0.0", port=port)
 #app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.sqlite3'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
@@ -193,7 +191,9 @@ def download_pdf(pdf_name):
     return send_from_directory('static', pdf_name, mimetype='application/pdf')
 
 
-
+if __name__ == '__main__':
+    port = int(os.getenv("PORT", 5000))  # Use Railway's PORT if available
+    app.run(host="0.0.0.0", port=port)
 
 
 
