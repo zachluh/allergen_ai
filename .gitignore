@@ -163,7 +163,7 @@ recipe_unsorted.txt
 *.jpeg
 *.pdf
 
-static/*
+static/*.pdf
 instance/*
 
 # PyCharm
