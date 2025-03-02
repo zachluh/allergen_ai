@@ -158,10 +158,6 @@ cython_debug/
 recipe.txt
 recipe_unsorted.txt
 
-*.png
-*.jpg
-*.jpeg
-*.pdf
 
 static/*.pdf
 instance/*

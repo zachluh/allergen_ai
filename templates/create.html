@@ -130,7 +130,7 @@
 
     for(let i = 0; i<params.length; i++) {
         params[i].addEventListener("keyup", function(e) {
-                if (e.key === "Enter") submitQuery(params[i], steps[i]);
+                submitQuery(params[i], steps[i], e.key);
             }
 
         )
@@ -144,7 +144,7 @@
 
 
 
-    function submitQuery(currentParam, step) {
+    function submitQuery(currentParam, step, key) {
         var isComplete = true;
         var emptyParamNumber;
 
@@ -185,16 +185,18 @@
 
 
 
-            if (step > emptyParamNumber) {
-                alert("This form cannot be empty");
+            if (key == "Enter") {
+                if (step > emptyParamNumber) {
+                    alert("This form cannot be empty");
+                }
+
+                labels[step].style.display = "none";
+                labels[emptyParamNumber].style.display = "block";
+                moveBar(emptyParamNumber);
+
+                if (emptyParamNumber == 1) imageicon.style.display = "block";
+                else imageicon.style.display = "none";
             }
-
-            labels[step].style.display = "none";
-            labels[emptyParamNumber].style.display = "block";
-            moveBar(emptyParamNumber);
-
-            if (emptyParamNumber == 1) imageicon.style.display = "block";
-            else imageicon.style.display = "none";
 
             return false;
 
