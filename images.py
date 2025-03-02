@@ -4,7 +4,7 @@ import os
 import cv2
 import easyocr
 
-pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+pytesseract.pytesseract.tesseract_cmd = os.getenv("TESSERACT_PATH")
 
 
 
