@@ -21,9 +21,22 @@ app.secret_key = os.getenv("SESSION_KEY")
 #app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.sqlite3'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
 
-app.config['SQLALCHEMY_BINDS'] = {
+
+if os.getenv("FLASK_ENV") == "production":
+    DATABASE_URL = os.getenv("DATABASE_URL")
+else:
+    DATABASE_URL = 'sqlite:///app.db'
+
+app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
+
+if os.getenv('FLASK_ENV') == 'production':
+    app.config['SQLALCHEMY_BINDS'] = {
+        'users': DATABASE_URL.replace('/app_db', '/users_db'),
+        'recipes': DATABASE_URL.replace('/app_db', '/recipes_db')
+    }
+else:
+    app.config['SQLALCHEMY_BINDS'] = {
         'users': 'sqlite:///users.db',
         'recipes': 'sqlite:///recipes.db'
     }
