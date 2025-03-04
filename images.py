@@ -4,7 +4,9 @@ import os
 import cv2
 import easyocr
 
-#pytesseract.pytesseract.tesseract_cmd = os.getenv("TESSERACT_PATH")
+
+if os.getenv("FLASK_ENV") == "local":
+    pytesseract.pytesseract.tesseract_cmd = os.getenv("TESSERACT_PATH")
 
 
 

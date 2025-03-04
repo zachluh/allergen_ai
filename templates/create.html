@@ -122,6 +122,7 @@
 
     const params = document.getElementsByTagName('textarea');
     const labels = document.getElementsByTagName('label');
+    const pictureSubmitter = document.getElementById('picturesubmit')
     const submit = document.getElementById("submitbutton");
     const steps = [];
     const imageicon = document.getElementById("image");
@@ -135,6 +136,11 @@
 
         )
     };
+
+    imageicon.addEventListener("change", function(e) {
+        console.log("ran")
+        submitQuery(params[1], steps[1], "Enter");
+    })
 
     let bar = document.getElementById('redbar');
     let grayBar = document.getElementById('graybar');
