@@ -137,10 +137,12 @@
         )
     };
 
-    imageicon.addEventListener("change", function(e) {
-        console.log("ran")
-        submitQuery(params[1], steps[1], "Enter");
-    })
+    if (imageicon) {
+        imageicon.addEventListener("change", function(e) {
+            console.log("ran")
+            submitQuery(params[1], steps[1], "Enter");
+        })
+    }
 
     let bar = document.getElementById('redbar');
     let grayBar = document.getElementById('graybar');
