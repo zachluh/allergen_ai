@@ -24,7 +24,7 @@
                     {% for recipe in recipes%}
                       <div class="col-md-4 col-sm-6 mb-4">
                           <div class="card shadow p-2 position-relative d-flex flex-row justify-content-between">
-                              <a target="_blank" href="{{url_for('download_pdf', pdf_name=recipe.true_name)}}" style="color:#d64161;width:70%;" class="text-decoration-none text-danger m-2">{{recipe.name}}</a>
+                              <a target="_blank" href={{recipe.true_name}} style="color:#d64161;width:70%;" class="text-decoration-none text-danger m-2">{{recipe.name}}</a>
                               <p class="delete-icon ms-auto" style="color:black;" onclick="deleteRecipe({{recipe._id}})">X</p>
                           </div>
 

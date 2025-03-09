@@ -1,4 +1,5 @@
 from dbm import error
+from os import getenv
 from uuid import uuid4
 
 from flask import Flask, render_template, request, url_for, flash, redirect, session, jsonify
@@ -14,6 +15,7 @@ import os
 from werkzeug.utils import secure_filename
 
 import images
+import boto3
 
 
 app = Flask("__name__")
@@ -40,6 +42,13 @@ else:
         'users': 'sqlite:///users.db',
         'recipes': 'sqlite:///recipes.db'
     }
+
+s3 = boto3.client(
+    "s3",
+    aws_access_key_id=os.getenv("AWS_ACCESS_KEY"),
+    aws_secret_access_key=os.getenv("AWS_SECRET_KEY"),
+    region_name=os.getenv("AWS_REGION")
+)
 
 UPLOAD_FOLDER = 'uploads'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
@@ -176,7 +185,7 @@ def generate_recipe():
     pdf_generator.generate(response, pdf_name, f"{allergies}-free {meal}")
 
     if "user" in session:
-        saved_recipe = recipes(session["user"], allergies + " free " + meal, pdf_name)
+        saved_recipe = recipes(session["user"], allergies + " free " + meal, upload_to_s3(f"static/{pdf_name}", f"pdfs/{pdf_name}"))
         db.session.add(saved_recipe)
         db.session.commit()
 
@@ -185,12 +194,13 @@ def generate_recipe():
 
 @app.route('/delete_recipe/<int:recipe_id>', methods=['POST'])
 def delete_recipe(recipe_id):
-    # Assuming you're using SQLAlchemy to interact with your database
     recipe = recipes.query.get(recipe_id)
     if recipe:
         db.session.delete(recipe)
         db.session.commit()
-        os.remove("static/" + recipe.true_name);
+        #os.remove("static/" + recipe.true_name)
+        key = recipe.true_name.split(f"https://{os.getenv("AWS_S3_BUCKET")}.s3.{os.getenv("AWS_REGION")}.amazonaws.com/")[1]
+        s3.delete_object(Bucket='allergenai-pdfs', Key=key)
         return jsonify({'success': True})
     return jsonify({'success': False}), 404
 
@@ -203,9 +213,15 @@ def logout():
 def download_pdf(pdf_name):
     return send_from_directory('static', pdf_name, mimetype='application/pdf')
 
+def upload_to_s3(file_path, filename):
+    S3_BUCKET = os.getenv("AWS_S3_BUCKET")
+    S3_REGION = os.getenv("AWS_REGION")
+    s3.upload_file(file_path, S3_BUCKET, filename)
+    return f"https://{S3_BUCKET}.s3.{S3_REGION}.amazonaws.com/{filename}"
+
 
 if __name__ == '__main__':
-    port = int(os.getenv("PORT", 5000))  # Use Railway's PORT if available
+    port = int(os.getenv("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
 
 
