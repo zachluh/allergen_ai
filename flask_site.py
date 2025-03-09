@@ -199,7 +199,7 @@ def delete_recipe(recipe_id):
         db.session.delete(recipe)
         db.session.commit()
         #os.remove("static/" + recipe.true_name)
-        key = recipe.true_name.split(f"https://{os.getenv("AWS_S3_BUCKET")}.s3.{os.getenv("AWS_REGION")}.amazonaws.com/")[1]
+        key = recipe.true_name.split(f"https://{os.getenv('AWS_S3_BUCKET')}.s3.{os.getenv('AWS_REGION')}.amazonaws.com/")[1]
         s3.delete_object(Bucket='allergenai-pdfs', Key=key)
         return jsonify({'success': True})
     return jsonify({'success': False}), 404
