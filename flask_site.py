@@ -84,8 +84,8 @@ class recipes(db.Model):
 
     _id = db.Column("id", db.Integer, primary_key=True)
     user = db.Column("user", db.Integer)
-    name = db.Column("name", db.String(100))
-    true_name = db.Column("true_name", db.String(100))
+    name = db.Column("name", db.String(256))
+    true_name = db.Column("true_name", db.String(256))
 
     def __init__(self, user, name, true_name):
         self.user = user
