@@ -219,6 +219,10 @@ def upload_to_s3(file_path, filename):
     s3.upload_file(file_path, S3_BUCKET, filename)
     return f"https://{S3_BUCKET}.s3.{S3_REGION}.amazonaws.com/{filename}"
 
+@app.route('/under_construction')
+def under_construction():
+    return render_template('under_construction.html')
+
 
 if __name__ == '__main__':
     port = int(os.getenv("PORT", 5000))
