@@ -7,19 +7,19 @@
         <title>Login/Sign up</title>
     </head>
     <body class="flex-column min-vh-100" style="display:flex;align-items:center;justify-content:center;height:100%;">
-        <main class="container" style="width:30%;">
+        <main class="container" style="width:30%;min-width:300px;max-width:700px;">
             <form method="post" class="card p-4 shadow">
                 <h1 class="display-6 mb-4 card-title">Login.</h1>
                 <div class="mb-3">
                     <label class="form-label">E-mail</label><br>
-                    <input type="text" class="form-control" action="" name="email" placeholder="E-mail"/>
+                    <input type="email" class="form-control" action="" name="email" placeholder="E-mail"/>
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label">Password</label><br>
-                    <input type="text" class="form-control" action="" name="password" placeholder="Password"/>
+                    <input type="password" class="form-control" action="" name="password" placeholder="Password"/>
                 </div>
-                <input class="form-control" type="submit" style="background-color:#d64161;color:white;border:none;height:2vw;"/>
+                <input class="form-control" type="submit" style="background-color:#d64161;color:white;border:none;"/>
             </form>
             <p style="display:infline-flex;">or <a href="{{ url_for('signup') }}" style="color:#d64161;text-decoration: none;">Sign up</a></p>
         </main>

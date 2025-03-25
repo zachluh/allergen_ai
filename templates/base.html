@@ -56,16 +56,15 @@
 
 
         .redirectbutton {
-            height: 3vw;
             background: none;
             outline: 0.3vw {% if navColor %} white {% else %} #d64161 {% endif %} solid;
-            position: absolute;
+            color:white;
             transition:1s;
         }
 
         .redirectbutton:hover {
             background-color:{% if navColor %} white {% else %} #d64161 {% endif %};
-            color:white;
+            color:{% if navColor %} {{navColor}} {% else %} white {% endif %};
             transition:1s;
         }
 
@@ -79,8 +78,8 @@
     </style>
 </head>
 <body>
-    <nav class=" navbar navbar-expand-lg ms-5 pe-5 mb-5" style="width:100%;position:absolute;">
-        <ul class="navbar-nav mr-auto" style="gap:2vw;">
+    <nav class=" navbar navbar-expand-lg navbar-expand-md ms-5 pe-5" style="width:100%;">
+        <ul class="navbar-nav mr-auto gap-3">
             <li class="nav-item" style="background:none;align-items:center;justify-content:center;">
                 <a class="btn navlink" href="{{ url_for('index') }}" style="font-family:Arial">Home</a>
             </li>
@@ -94,7 +93,7 @@
         </ul>
 
 
-        <ul class="navbar-nav ms-auto pe-5" style="gap:2vw;">
+        <ul class="navbar-nav ms-auto pe-5 gap-3" style="">
 
              {% if "user" not in session %}
             <li class="nav-item" style="justify-content:flex-end;align-items:center;">

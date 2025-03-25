@@ -14,7 +14,7 @@
     </style>
 
     <body class="flex-column min-vh-100" style="display:flex;align-items:center;justify-content:center;height:100%;">
-        <main class="container" style="width:40%;">
+        <main class="container" style="width:40%;min-width:350px;max-width:750px;">
             <form method="post" class="card p-4 shadow">
                 <h1 class="display-6 mb-4 card-title">Sign Up.</h1>
                 <div class="mb-3">
@@ -29,14 +29,14 @@
                 </div>
                 <div class="mb-3">
                     <label class="form-label">E-mail</label><br>
-                    <input type="text" class="form-control {{'input-error' if error}}" action="" name="email" placeholder="E-mail"/>
+                    <input type="email" class="form-control {{'input-error' if error}}" action="" name="email" placeholder="E-mail"/>
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label">Password</label><br>
                     <input type="text" class="form-control" action="" name="password" placeholder="Password"/>
                 </div>
-                <input class="form-control" type="submit" style="background-color:#d64161;color:white;border:none;height:2vw;"/>
+                <input class="form-control" type="submit" style="background-color:#d64161;color:white;border:none;"/>
 
                 {% if error %}
                     <p class="mb-3" style="color:red">{{error}}</p>
