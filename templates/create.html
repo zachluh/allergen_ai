@@ -6,7 +6,8 @@
         label {
             color:#f54254;
             font-family:Arial;
-            font-size:2vw;
+            font-size:120%;
+
 
         }
 
@@ -48,9 +49,9 @@
 
     </style>
 
-    <body class="min-vh-100" style="height:100%;">
-        <main class="container mx-auto" style="display:flex;justify-content:center;align-items:center;height:100%;">
-            <form class="card shadow" method="post" style="width:40%;" enctype="multipart/form-data">
+    <body class="min-vh-100 ">
+        <main class="container mx-auto h-100 align-items-center d-flex justify-content-center mb-5" style="">
+            <form class="card shadow" method="post" style="width:40%;min-width:350px;" enctype="multipart/form-data">
                 <div class="position-relative">
                     <div class="graybar z-0 position-absolute" id="graybar"></div>
                     <div class="redbar z-1 position-absolute" id="redbar"></div>
@@ -58,7 +59,7 @@
 
 
                 <label class="form-label m-3" for="meal" name="label0" style="">Meal
-                    <textarea class="form-control p-3" placeholder="Alfredo Sauce..." name="meal" id="meal" style="">{{ request.form['meal'] }}</textarea>
+                    <textarea class="form-control p-3" placeholder="Alfredo Sauce..." name="meal" id="meal" style="font-size:80%;">{{ request.form['meal'] }}</textarea>
                 </label>
 
 
@@ -87,13 +88,13 @@
 
                     if (getValuesFromSearch("recipeRequired") == "yes") {
                         document.write('<label class="form-label m-3" for="recipe" name="label1" style=" display:none">Recipe<textarea  class="form-control p-3" placeholder="Copy paste or submit a picture..." name="recipe" id="recipe">{{ request.form['recipe'] }}</textarea></label>');
-                        document.write('<input class="form-control m-3" type="file" id="image" name="image" style="display:none;width:auto;" placeholder="Choose picture"/>');
+                        document.write('<input class="form-control m-3" type="file" id="image" name="image" style="display:none;width:auto;font-size:80%;" placeholder="Choose picture"/>');
                     }
                 </script>
 
 
                 <label class="form-label m-3" for="allergies" name="label2" style="display:none;">Allergies
-                    <textarea class="form-control p-3" placeholder="Dairy, Eggs..." name="allergies" id="allergies">{{ request.form['allergies'] }}</textarea>
+                    <textarea class="form-control p-3" placeholder="Dairy, Eggs..." name="allergies" id="allergies" style="font-size:80%;">{{ request.form['allergies'] }}</textarea>
                 </label>
 
                 <div class="m-4">
