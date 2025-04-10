@@ -13,6 +13,7 @@ import pdf_generator
 import os
 
 from werkzeug.utils import secure_filename
+from werkzeug.security import generate_password_hash, check_password_hash
 
 import images
 import boto3
@@ -68,7 +69,8 @@ class users(db.Model):
     first_name = db.Column("first_name", db.String(100))
     last_name = db.Column("last_name", db.String(100))
     email = db.Column("email", db.String(100))
-    password = db.Column("password", db.String(100))
+    password = db.Column("password", db.String(200))
+
 
 
     def __init__(self, first_name, last_name, email, password):
@@ -112,8 +114,8 @@ def account_page():
 @app.route("/login/", methods=['GET', 'POST'])
 def login():
     if request.method == "POST":
-        found_user = users.query.filter_by(email=request.form.get('email'), password=request.form.get('password')).first()
-        if found_user:
+        found_user = users.query.filter_by(email=request.form.get('email')).first()
+        if found_user and check_password_hash(found_user.password, request.form.get('password')):
             print("Login success")
             session["user"] = found_user._id
             return redirect(url_for('account_page'))
@@ -129,7 +131,8 @@ def signup():
 
         if not existing_email:
 
-            user = users(request.form.get('first_name'), request.form.get('last_name'), request.form.get('email'), request.form.get('password'))
+            hashed_password = generate_password_hash(request.form.get('password'), method='pbkdf2:sha256', salt_length=16)
+            user = users(request.form.get('first_name'), request.form.get('last_name'), request.form.get('email'), hashed_password)
 
             first_name = request.form.get('first_name')
 
