@@ -187,7 +187,7 @@ def generate_recipe():
     pdf_name = "recipe" + str(uuid.uuid4()) + ".pdf"
     pdf_generator.generate(response, pdf_name, f"{allergies}-free {meal}")
 
-    if "user" in session:
+    if "user" in session and len(response) > 100:
         saved_recipe = recipes(session["user"], allergies + " free " + meal, upload_to_s3(f"static/{pdf_name}", f"pdfs/{pdf_name}"))
         db.session.add(saved_recipe)
         db.session.commit()
