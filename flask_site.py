@@ -2,7 +2,7 @@ from dbm import error
 from os import getenv
 from uuid import uuid4
 
-from flask import Flask, render_template, request, url_for, flash, redirect, session, jsonify
+from flask import Flask, render_template, request, url_for, flash, redirect, session, jsonify, g
 from flask import send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 
@@ -17,6 +17,8 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 import images
 import boto3
+
+import secrets
 
 
 app = Flask("__name__")
@@ -102,6 +104,7 @@ def allowed_file(filename):
 
 @app.route("/")
 def index():
+    print("Render Nonce:", g.get('nonce', ''))
     return render_template('index.html')
 
 @app.route("/account_page/", methods=["GET", "POST"])
@@ -157,7 +160,7 @@ def signup():
 def create():
     return render_template('create.html')
 
-@app.route('/create/', methods=['GET', 'POST'])
+@app.route('/create/', methods=['POST'])
 def generate_recipe():
     meal = request.form.get('meal')
     recipe = request.form.get('recipe')
@@ -225,6 +228,26 @@ def upload_to_s3(file_path, filename):
 @app.route('/under_construction')
 def under_construction():
     return render_template('under_construction.html')
+
+@app.before_request
+def set_nonce():
+    if not hasattr(g, 'nonce'):
+        g.nonce = secrets.token_urlsafe(16)
+
+@app.context_processor
+def inject_nonce():
+    return {'nonce': g.nonce}
+
+@app.after_request
+def add_csp(response):
+    nonce = g.nonce
+    print("CSP Nonce:", g.get('nonce', ''))
+    response.headers['Content-Security-Policy'] = (
+        f"default-src 'self'; "
+        f"script-src 'self' https://cdn.jsdelivr.net 'nonce-{nonce}';"
+        f"style-src 'self' https://cdn.jsdelivr.net 'nonce-{nonce}';"
+    )
+    return response
 
 
 if __name__ == '__main__':

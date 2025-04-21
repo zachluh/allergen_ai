@@ -1,7 +1,11 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <style type="text/css">
+    <style type="text/css" nonce="{{nonce}}">
+
+        body {
+            height:100%;
+        }
 
         label {
             color:#f54254;
@@ -18,6 +22,8 @@
         .sliders {
             font-family:Raleway;
             color:#f54254;
+            display:inline-flex;
+            width:5%;
         }
 
         .graybar {
@@ -47,19 +53,68 @@
             color:white;
         }
 
+        form {
+            width:40%;
+            min-width:350px;
+        }
+
+        .meal textarea {
+            font-size:80%;
+        }
+
+        .recipe {
+            display:none
+        }
+
+        .recipe textarea {
+            font-size:80%;
+        }
+
+        .recipe-image-input {
+            display:none;
+            width:auto;
+            font-size:80%;
+        }
+
+        .allergies {
+            display:none;
+        }
+
+        .allergies textarea {
+            font-size:80%;
+        }
+
+        .submit-button {
+            display:none;
+            width:100%;
+        }
+
+        .submit-button-container {
+            flex-grow:1;
+            min-width:0;
+        }
+
+        .main-container {
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            height:100%;
+        }
+
+
     </style>
 
-    <body class="min-vh-100 ">
-        <main class="container mx-auto h-100 align-items-center d-flex justify-content-center mb-5" style="">
-            <form class="card shadow" method="post" style="width:40%;min-width:350px;" enctype="multipart/form-data">
+    <body class="min-vh-100">
+        <main class="container main-container mb-5">
+            <form class="card shadow" method="post" enctype="multipart/form-data">
                 <div class="position-relative">
                     <div class="graybar z-0 position-absolute" id="graybar"></div>
                     <div class="redbar z-1 position-absolute" id="redbar"></div>
                 </div>
 
 
-                <label class="form-label m-3" for="meal" name="label0" style="">Meal
-                    <textarea class="form-control p-3" placeholder="Alfredo Sauce..." name="meal" id="meal" style="font-size:80%;">{{ request.form['meal'] }}</textarea>
+                <label class="form-label m-3 meal" for="meal" name="label0">Meal
+                    <textarea class="form-control p-3" placeholder="Alfredo Sauce..." name="meal" id="meal" maxlength="100">{{ request.form['meal'] }}</textarea>
                 </label>
 
 
@@ -87,25 +142,25 @@
                     }
 
                     if (getValuesFromSearch("recipeRequired") == "yes") {
-                        document.write('<label class="form-label m-3" for="recipe" name="label1" style=" display:none">Recipe<textarea  class="form-control p-3" placeholder="Copy paste or submit a picture..." name="recipe" id="recipe">{{ request.form['recipe'] }}</textarea></label>');
-                        document.write('<input class="form-control m-3" type="file" id="image" name="image" style="display:none;width:auto;font-size:80%;" placeholder="Choose picture"/>');
+                        document.write('<label class="form-label m-3 recipe" for="recipe" name="label1">Recipe<textarea  class="form-control p-3" placeholder="Copy paste or submit a picture..." name="recipe" id="recipe" maxlength="1500">{{ request.form['recipe'] }}</textarea></label>');
+                        document.write('<input class="form-control m-3 recipe-image-input" type="file" id="image" name="image" placeholder="Choose picture"/>');
                     }
                 </script>
 
 
-                <label class="form-label m-3" for="allergies" name="label2" style="display:none;">Allergies
-                    <textarea class="form-control p-3" placeholder="Dairy, Eggs..." name="allergies" id="allergies" style="font-size:80%;">{{ request.form['allergies'] }}</textarea>
+                <label class="form-label m-3 allergies" for="allergies" name="label2">Allergies
+                    <textarea class="form-control p-3" placeholder="Dairy, Eggs..." name="allergies" id="allergies" maxlength="150">{{ request.form['allergies'] }}</textarea>
                 </label>
 
                 <div class="m-4">
-                    <div id="leftslider" class="sliders" style="display:inline-flex;width:5%;">
-                        <h1 class="display-3" style="cursor:pointer;" onclick="slide('left')">&lt;</h1>
+                    <div id="leftslider" class="sliders">
+                        <h1 class="display-3" style="cursor:pointer;">&lt;</h1>
                     </div>
-                    <div id="rightslider" class="sliders ps-5" style="display:inline-flex;width:5%;">
-                        <h1 class="display-3" style="cursor:pointer;" onclick="slide('right')">&gt;</h1>
+                    <div id="rightslider" class="sliders ps-5">
+                        <h1 class="display-3" style="cursor:pointer;">&gt;</h1>
                     </div>
-                    <div class= style="display:inline-flex;flex-grow:1;min-width:0;">
-                        <button class="form-control" type="submit" id="submitbutton" style="display:none;width:100%;">Submit</button>
+                    <div class="submit-button-container">
+                        <button class="form-control submit-button" type="submit" id="submitbutton">Submit</button>
                     </div>
 
                 </div>
@@ -119,7 +174,7 @@
 
 
 
-      <script type="text/javascript">
+      <script type="text/javascript" nonce="{{nonce}}">
 
     const params = document.getElementsByTagName('textarea');
     const labels = document.getElementsByTagName('label');
@@ -127,6 +182,14 @@
     const submit = document.getElementById("submitbutton");
     const steps = [];
     const imageicon = document.getElementById("image");
+
+    document.getElementById('leftslider').addEventListener('click', () => {
+        slide('left');
+    });
+
+    document.getElementById('rightslider').addEventListener('click', () => {
+        slide('right');
+    });
 
     for (let i = 0; i<=params.length; i++) steps[i] = i;
 

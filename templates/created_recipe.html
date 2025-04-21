@@ -2,19 +2,46 @@
 
 {% block content %}
 
-            <style>
+            <style nonce="{{nonce}}">
+                .main-container {
+                   display:flex;
+                   justify-content:center;
+                   align-items:center;
+                   height:100%;
+                }
+
+                .recipe-card {
+                    display:inline-block;
+                    backdrop-filter:blur(10px);
+                }
+
+                .recipe-card-title {
+                    font-size:4vw;
+                    color:black;
+                }
+
+                .recipe-text {
+                    width:50%;
+                    color:#f54254;
+                    font-size:1vw;
+                }
+                .save-button {
+                    background-color:#f54254;
+                    color:white;
+                    border:none;
+                }
 
             </style>
 
                 <body>
-                    <main class="container mx-auto p-7" style="display:flex;justify-content:center;align-items:center;height:100%;">
-                        <div class="card shadow p-4" style="display:inline-block; backdrop-filter:blur(10px);">
-                            <h1 style="font-size:4vw;color:black;"> Here is your new recipe:
-                                    <p id="recipe-text" style="width:50%;color:#f54254;font-size:1vw;">{{ recipe }}</p>
+                    <main class="container mx-auto p-7 main-container">
+                        <div class="card shadow p-4 recipe-card">
+                            <h1> Here is your new recipe:
+                                    <p id="recipe-text" class="recipe-text">{{ recipe }}</p>
                             </h1>
                             <div class="d-md-flex gap-2 d-grid ">
                                 <a href="{{ url_for('download_pdf', pdf_name=pdf_name) }}" download>
-                                    <input class="btn btn-info me-md-2" value="Save recipe" type="button" style="background-color:#f54254;color:white;border:none;"/>
+                                    <input class="btn btn-info me-md-2 save-button" value="Save recipe" type="button"/>
                                 </a>
                                 <a href="{{ url_for('index') }}">
                                     <input class="btn btn-secondary" value="Create a new recipe" type="submit"/>
@@ -28,10 +55,10 @@
                         function adjustFontSize() {
                             let pTag = document.getElementById("recipe-text");
                             let card = document.querySelector(".card");
-                            let fontSize = 1.5; // Start at 1.5vw
+                            let fontSize = 1.5;
 
                             while (pTag.scrollHeight > card.clientHeight * 0.6 && fontSize > 0.8) {
-                                fontSize -= 0.05; // Decrease the font size gradually
+                                fontSize -= 0.05;
                                 pTag.style.fontSize = fontSize + "vw";
                             }
                         }

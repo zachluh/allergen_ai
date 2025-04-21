@@ -8,7 +8,7 @@
      <link rel="icon"
      type="image/png"
      href="static/pan_spatula.png">
-    <style>
+    <style nonce="{{nonce}}">
 
         ::-webkit-scrollbar {
             display: none;
@@ -73,12 +73,20 @@
             transition:1s;
         }
 
+        .base-navbar {
+            width:100%;
+        }
+
+        .base-container {
+            height:100vh;
+        }
+
 
 
     </style>
 </head>
 <body>
-    <nav class=" navbar navbar-expand-lg navbar-expand-md ms-5 pe-5" style="width:100%;">
+    <nav class="navbar navbar-expand-lg navbar-expand-md ms-5 pe-5 base-navbar">
         <ul class="navbar-nav mr-auto gap-3">
             <li class="nav-item" style="background:none;align-items:center;justify-content:center;">
                 <a class="btn navlink" href="{{ url_for('index') }}" style="font-family:Arial">Home</a>
@@ -93,7 +101,7 @@
         </ul>
 
 
-        <ul class="navbar-nav ms-auto pe-5 gap-3" style="">
+        <ul class="navbar-nav ms-auto pe-5 gap-3">
 
              {% if "user" not in session %}
             <li class="nav-item" style="justify-content:flex-end;align-items:center;">
@@ -127,7 +135,7 @@
 
 
     </nav>
-    <div class="content" style="height:100vh;">
+    <div class="content base-container">
         {% block content %} {% endblock %}
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
