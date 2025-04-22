@@ -24,6 +24,7 @@
             color:#f54254;
             display:inline-flex;
             width:5%;
+            cursor:pointer;
         }
 
         .graybar {
@@ -106,7 +107,8 @@
 
     <body class="min-vh-100">
         <main class="container main-container mb-5">
-            <form class="card shadow" method="post" enctype="multipart/form-data">
+            <form class="card shadow" method="post" enctype="multipart/form-data" >
+                <input type="hidden" name="csrf_token" value="{{ token }}">
                 <div class="position-relative">
                     <div class="graybar z-0 position-absolute" id="graybar"></div>
                     <div class="redbar z-1 position-absolute" id="redbar"></div>
@@ -154,10 +156,10 @@
 
                 <div class="m-4">
                     <div id="leftslider" class="sliders">
-                        <h1 class="display-3" style="cursor:pointer;">&lt;</h1>
+                        <h1 class="display-3">&lt;</h1>
                     </div>
                     <div id="rightslider" class="sliders ps-5">
-                        <h1 class="display-3" style="cursor:pointer;">&gt;</h1>
+                        <h1 class="display-3">&gt;</h1>
                     </div>
                     <div class="submit-button-container">
                         <button class="form-control submit-button" type="submit" id="submitbutton">Submit</button>

@@ -19,6 +19,7 @@ import images
 import boto3
 
 import secrets
+from itsdangerous import URLSafeTimedSerializer, BadSignature
 
 
 app = Flask("__name__")
@@ -102,6 +103,22 @@ with app.app_context():
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+serializer = URLSafeTimedSerializer(app.secret_key)
+
+def generate_csrf_token():
+    return serializer.dumps('csrf-token', salt='csrf-token')
+
+def validate_csrf_token(token):
+
+    if not token:
+        return False
+
+    try:
+        data = serializer.loads(token, salt='csrf-token', max_age=3600)
+        return data == 'csrf-token'
+    except BadSignature:
+        return False
+
 @app.route("/")
 def index():
     print("Render Nonce:", g.get('nonce', ''))
@@ -158,45 +175,53 @@ def signup():
 
 @app.route('/create/', methods=['GET'])
 def create():
-    return render_template('create.html')
+    token = generate_csrf_token()
+    return render_template('create.html', token=token)
 
 @app.route('/create/', methods=['POST'])
 def generate_recipe():
-    meal = request.form.get('meal')
-    recipe = request.form.get('recipe')
-    allergies = request.form.get('allergies')
+    token = request.form.get('csrf_token')
 
-    if recipe == '':
-        if request.method == 'POST':
-            if 'image' not in request.files:
-                return "No file part"
-            file = request.files['image']
-            if file.filename == '':
-                return "No selected file"
-            if file and allowed_file(file.filename):
-                filename = secure_filename(file.filename)
-                filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-                file.save(filepath)
-                recipe = images.read(filepath)
+    if (validate_csrf_token(token)):
 
 
-    response = ''
+        meal = request.form.get('meal')
+        recipe = request.form.get('recipe')
+        allergies = request.form.get('allergies')
 
-    if recipe is None:
-       response = main.work_from_nothing(meal, allergies)
+        if recipe == '':
+            if request.method == 'POST':
+                if 'image' not in request.files:
+                    return "No file part"
+                file = request.files['image']
+                if file.filename == '':
+                    return "No selected file"
+                if file and allowed_file(file.filename):
+                    filename = secure_filename(file.filename)
+                    filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                    file.save(filepath)
+                    recipe = images.read(filepath)
+
+
+        response = ''
+
+        if recipe is None:
+           response = main.work_from_nothing(meal, allergies)
+        else:
+           response = main.work(meal, recipe, allergies)
+
+        pdf_name = "recipe" + str(uuid.uuid4()) + ".pdf"
+        pdf_generator.generate(response, pdf_name, f"{allergies}-free {meal}")
+
+        if "user" in session and len(response) > 100:
+            saved_recipe = recipes(session["user"], allergies + " free " + meal, upload_to_s3(f"static/{pdf_name}", f"pdfs/{pdf_name}"))
+            db.session.add(saved_recipe)
+            db.session.commit()
+
+
+        return render_template('created_recipe.html', recipe=Markup(response.replace('\n', '<br>')), pdf_name=pdf_name)
     else:
-       response = main.work(meal, recipe, allergies)
-
-    pdf_name = "recipe" + str(uuid.uuid4()) + ".pdf"
-    pdf_generator.generate(response, pdf_name, f"{allergies}-free {meal}")
-
-    if "user" in session and len(response) > 100:
-        saved_recipe = recipes(session["user"], allergies + " free " + meal, upload_to_s3(f"static/{pdf_name}", f"pdfs/{pdf_name}"))
-        db.session.add(saved_recipe)
-        db.session.commit()
-
-
-    return render_template('created_recipe.html', recipe=Markup(response.replace('\n', '<br>')), pdf_name=pdf_name)
+        return "Invalid CSRF token", 400
 
 @app.route('/delete_recipe/<int:recipe_id>', methods=['POST'])
 def delete_recipe(recipe_id):
@@ -247,6 +272,10 @@ def add_csp(response):
         f"script-src 'self' https://cdn.jsdelivr.net 'nonce-{nonce}';"
         f"style-src 'self' https://cdn.jsdelivr.net 'nonce-{nonce}';"
     )
+    response.headers['X-Frame-Options'] = 'DENY'
+    response.headers['X-Content-Type-Options'] = 'nosniff'
+    if os.getenv('FLASK_ENV') == 'production':
+        response.headers['Strict-Transport-Security'] = 'max-age=63072000; includeSubDomains; preload'
     return response
 
 
