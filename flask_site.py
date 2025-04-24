@@ -254,6 +254,14 @@ def upload_to_s3(file_path, filename):
 def under_construction():
     return render_template('under_construction.html')
 
+@app.route("/sitemap.xml")
+def sitemap():
+    return send_from_directory(".", "sitemap.xml")
+
+@app.route("/robots.txt")
+def robots():
+    return send_from_directory(".", "robots.txt")
+
 @app.before_request
 def set_nonce():
     if not hasattr(g, 'nonce'):
@@ -277,6 +285,7 @@ def add_csp(response):
     if os.getenv('FLASK_ENV') == 'production':
         response.headers['Strict-Transport-Security'] = 'max-age=63072000; includeSubDomains; preload'
     return response
+
 
 
 if __name__ == '__main__':
