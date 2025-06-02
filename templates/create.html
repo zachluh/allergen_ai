@@ -54,9 +54,9 @@
             color:white;
         }
 
-        form {
+        .create-form {
             width:40%;
-            min-width:350px;
+            min-width:300px;
         }
 
         .meal textarea {
@@ -107,7 +107,7 @@
 
     <body class="min-vh-100">
         <main class="container main-container mb-5">
-            <form class="card shadow" method="post" enctype="multipart/form-data" >
+            <form class="create-form card shadow" method="post" enctype="multipart/form-data" >
                 <input type="hidden" name="csrf_token" value="{{ token }}">
                 <div class="position-relative">
                     <div class="graybar z-0 position-absolute" id="graybar"></div>
